@@ -1,11 +1,13 @@
-use std::{env, fs};
-
+use std::{env, fs, process};
+use minigrep::*;
 fn main() {
 	let args: Vec<String> = env::args().collect();
-	let query = &args[1];
-	let path = &args[2];
-	println!("searching for '{query}' in {path}");
-	let content = fs::read_to_string(path)
-	.expect("pls enter a valid file path !");
-	println!("{content}");
+
+	let config = Config::build(&args).unwrap_or_else(|err|{
+	eprintln!("Problem parsing argumets {err}");
+	process::exit(1);
+	});
+	
+	let _ = run(config);
 }
+
